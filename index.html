@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football News - Top 5 European Leagues</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background-color: #1E3A8A; /* Blue Header */
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        nav {
+            background-color: #1E40AF; /* Blue Navigation */
+            padding: 10px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+        .news-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 15px;
+            margin: 10px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: none; /* Initially hidden */
+        }
+        .news-section.active {
+            display: block; /* Show active section */
+        }
+        .news-section h2 {
+            color: #1E3A8A; /* Blue Section Titles */
+        }
+        .news-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        .news-item a {
+            font-size: 18px;
+            color: #1E40AF; /* Blue Links */
+            text-decoration: none;
+        }
+        .news-item a:hover {
+            text-decoration: underline;
+        }
+        footer {
+            background-color: #1E3A8A; /* Blue Footer */
+            color: white;
+            text-align: center;
+            padding: 15px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <h1>Football News - Top 5 European Leagues</h1>
+    </header>
+
+    <!-- Navigation Section -->
+    <nav>
+        <a href="#" id="premier-league-nav">Premier League</a>
+        <a href="#" id="la-liga-nav">La Liga</a>
+        <a href="#" id="serie-a-nav">Serie A</a>
+        <a href="#" id="bundesliga-nav">Bundesliga</a>
+        <a href="#" id="ligue-1-nav">Ligue 1</a>
+    </nav>
+
+    <!-- Main Content Section -->
+    <div class="main-content">
+
+        <!-- Premier League News -->
+        <div class="news-section" id="premier-league">
+            <h2>Premier League News</h2>
+            <div id="premier-league-news">
+                <!-- News will be inserted here dynamically -->
+            </div>
+        </div>
+
+        <!-- La Liga News -->
+        <div class="news-section" id="la-liga">
+            <h2>La Liga News</h2>
+            <div id="la-liga-news">
+                <!-- News will be inserted here dynamically -->
+            </div>
+        </div>
+
+        <!-- Serie A News -->
+        <div class="news-section" id="serie-a">
+            <h2>Serie A News</h2>
+            <div id="serie-a-news">
+                <!-- News will be inserted here dynamically -->
+            </div>
+        </div>
+
+        <!-- Bundesliga News -->
+        <div class="news-section" id="bundesliga">
+            <h2>Bundesliga News</h2>
+            <div id="bundesliga-news">
+                <!-- News will be inserted here dynamically -->
+            </div>
+        </div>
+
+        <!-- Ligue 1 News -->
+        <div class="news-section" id="ligue-1">
+            <h2>Ligue 1 News</h2>
+            <div id="ligue-1-news">
+                <!-- News will be inserted here dynamically -->
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2025 Football News - All rights reserved</p>
+    </footer>
+
+    <!-- JavaScript to Fetch Real Football News and Toggle Sections -->
+    <script>
+        const apiKey = '394073b3bb1d4b9eb2f25e860fb20ee0'; // Your NewsAPI key
+        const apiUrl = `https://newsapi.org/v2/everything?q=football&apiKey=${apiKey}`;
+
+        async function fetchFootballNews() {
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                // Log the API response to check data
+                console.log(data);
+
+                if (data.status === 'ok') {
+                    const articles = data.articles;
+                    console.log(articles); // Log the articles to check structure
+                    categorizeNews(articles);
+                } else {
+                    console.error('Failed to fetch news');
+                }
+            } catch (error) {
+                console.error('Error fetching news:', error);
+            }
+        }
+
+        function categorizeNews(articles) {
+            const premierLeagueNews = document.getElementById('premier-league-news');
+            const laLigaNews = document.getElementById('la-liga-news');
+            const serieANews = document.getElementById('serie-a-news');
+            const bundesligaNews = document.getElementById('bundesliga-news');
+            const ligue1News = document.getElementById('ligue-1-news');
+
+            // Clear existing content in all sections
+            premierLeagueNews.innerHTML = '';
+            laLigaNews.innerHTML = '';
+            serieANews.innerHTML = '';
+            bundesligaNews.innerHTML = '';
+            ligue1News.innerHTML = '';
+
+            // Categorizing news articles by league (for simplicity, using keywords)
+            articles.forEach(article => {
+                const newsItem = `<div class="news-item"><a href="${article.url}" target="_blank">${article.title}</a><p>${article.description}</p></div>`;
+
+                // Check if title contains league names (case-insensitive)
+                if (article.title.toLowerCase().includes('premier league')) {
+                    premierLeagueNews.innerHTML += newsItem;
+                } else if (article.title.toLowerCase().includes('la liga')) {
+                    laLigaNews.innerHTML += newsItem;
+                } else if (article.title.toLowerCase().includes('serie a')) {
+                    serieANews.innerHTML += newsItem;
+                } else if (article.title.toLowerCase().includes('bundesliga')) {
+                    bundesligaNews.innerHTML += newsItem;
+                } else if (article.title.toLowerCase().includes('ligue 1')) {
+                    ligue1News.innerHTML += newsItem;
+                }
+            });
+        }
+
+        function displayLeagueNews(league) {
+            const sections = {
+                'premier-league': 'Premier League News',
+                'la-liga': 'La Liga News',
+                'serie-a': 'Serie A News',
+                'bundesliga': 'Bundesliga News',
+                'ligue-1': 'Ligue 1 News'
+            };
+
+            // Hide all sections first
+            const allSections = document.querySelectorAll('.news-section');
+            allSections.forEach(section => section.style.display = 'none');
+
+            // Show the selected league section
+            const leagueSection = document.getElementById(league);
+            leagueSection.style.display = 'block';
+        }
+
+        // Event Listeners for the navigation links
+        document.getElementById('premier-league-nav').addEventListener('click', () => displayLeagueNews('premier-league'));
+        document.getElementById('la-liga-nav').addEventListener('click', () => displayLeagueNews('la-liga'));
+        document.getElementById('serie-a-nav').addEventListener('click', () => displayLeagueNews('serie-a'));
+        document.getElementById('bundesliga-nav').addEventListener('click', () => displayLeagueNews('bundesliga'));
+        document.getElementById('ligue-1-nav').addEventListener('click', () => displayLeagueNews('ligue-1'));
+
+        // Fetch and display the news when the page loads
+        fetchFootballNews();
+    </script>
+
+</body>
+</html>
